@@ -1,0 +1,6 @@
+configuracion = {
+    'host': 'localhost'
+    'database' : 'agenda'
+    'user' : 'root'
+    'password' : ''
+}

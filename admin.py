@@ -1,0 +1,121 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'admin.ui'
+#
+# Created by: PyQt5 UI code generator 5.12.2
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(819, 540)
+        MainWindow.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.58, x2:1, y2:0.551, stop:0.857955 rgba(227, 227, 227, 255), stop:1 rgba(255, 255, 255, 255));")
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(30, 140, 231, 161))
+        font = QtGui.QFont()
+        font.setFamily("Yu Gothic UI Light")
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setUnderline(False)
+        font.setWeight(50)
+        self.pushButton.setFont(font)
+        self.pushButton.setStyleSheet("background-color: rgb(227, 227, 227);")
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(280, 140, 231, 161))
+        font = QtGui.QFont()
+        font.setFamily("Yu Gothic UI Light")
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setUnderline(False)
+        font.setWeight(50)
+        self.pushButton_2.setFont(font)
+        self.pushButton_2.setStyleSheet("background-color: rgb(227, 227, 227);")
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setGeometry(QtCore.QRect(530, 140, 241, 161))
+        font = QtGui.QFont()
+        font.setFamily("Yu Gothic UI Light")
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setUnderline(False)
+        font.setWeight(50)
+        self.pushButton_3.setFont(font)
+        self.pushButton_3.setStyleSheet("background-color: rgb(227, 227, 227);")
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_4.setGeometry(QtCore.QRect(530, 330, 241, 151))
+        font = QtGui.QFont()
+        font.setFamily("Yu Gothic UI Light")
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setUnderline(False)
+        font.setWeight(50)
+        self.pushButton_4.setFont(font)
+        self.pushButton_4.setStyleSheet("background-color: rgb(227, 227, 227);")
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_5.setGeometry(QtCore.QRect(30, 330, 231, 151))
+        font = QtGui.QFont()
+        font.setFamily("Yu Gothic UI Light")
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setUnderline(False)
+        font.setWeight(50)
+        self.pushButton_5.setFont(font)
+        self.pushButton_5.setStyleSheet("background-color: rgb(227, 227, 227);")
+        self.pushButton_5.setObjectName("pushButton_5")
+        self.pushButton_6 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_6.setGeometry(QtCore.QRect(280, 330, 231, 151))
+        font = QtGui.QFont()
+        font.setFamily("Yu Gothic UI Light")
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setUnderline(False)
+        font.setWeight(50)
+        self.pushButton_6.setFont(font)
+        self.pushButton_6.setStyleSheet("background-color: rgb(227, 227, 227);")
+        self.pushButton_6.setObjectName("pushButton_6")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(280, 50, 211, 41))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.label.setFont(font)
+        self.label.setStyleSheet("background-color: rgb(227, 227, 227);")
+        self.label.setObjectName("label")
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "Admin"))
+        self.pushButton.setText(_translate("MainWindow", "AGENDA"))
+        self.pushButton_2.setText(_translate("MainWindow", "AGREGAR CITA"))
+        self.pushButton_3.setText(_translate("MainWindow", "NUEVO PACIENTE"))
+        self.pushButton_4.setText(_translate("MainWindow", "CONFIGURACION"))
+        self.pushButton_5.setText(_translate("MainWindow", "HISTORIAL CLÍNICO"))
+        self.pushButton_6.setText(_translate("MainWindow", "BUSCAR PACIENTE"))
+        self.label.setText(_translate("MainWindow", "ADMINISTRADOR"))
+
+
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
