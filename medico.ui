@@ -64,7 +64,7 @@
      <string notr="true">background-color: rgb(227, 227, 227);</string>
     </property>
     <property name="text">
-     <string>AGREGAR CITA</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="Btn_nuevopaciente_m">
@@ -164,7 +164,7 @@
      <string notr="true">background-color: rgb(227, 227, 227);</string>
     </property>
     <property name="text">
-     <string>BUSCAR PACIENTE</string>
+     <string>PROGRAMAR CITA</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_medico">

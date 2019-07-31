@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>505</width>
-    <height>413</height>
+    <height>412</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,14 +49,14 @@ background-color: rgb(227, 227, 227);</string>
   <widget class="QPushButton" name="pb_agregar_nuevo_B">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>380</x>
      <y>340</y>
      <width>91</width>
      <height>61</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(227, 227, 227);</string>
+    <string notr="true">background-color: rgb(170, 255, 255);</string>
    </property>
    <property name="text">
     <string>Programar cita</string>
@@ -82,9 +82,9 @@ background-color: rgb(227, 227, 227);</string>
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>120</x>
      <y>10</y>
-     <width>161</width>
+     <width>311</width>
      <height>21</height>
     </rect>
    </property>
@@ -97,7 +97,7 @@ background-color: rgb(227, 227, 227);</string>
     <string notr="true">background-color: rgb(227, 227, 227);</string>
    </property>
    <property name="text">
-    <string>BUSCAR PACIENTE</string>
+    <string>Seleccione el paciente a consultar</string>
    </property>
   </widget>
   <widget class="QTableWidget" name="tabla">
@@ -136,11 +136,14 @@ background-color: rgb(227, 227, 227);</string>
   <widget class="QPushButton" name="pb_nuevopx">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>340</y>
+     <x>10</x>
+     <y>370</y>
      <width>91</width>
-     <height>61</height>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 250, 169);</string>
    </property>
    <property name="text">
     <string>Nuevo paciente</string>

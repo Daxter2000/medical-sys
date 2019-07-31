@@ -30,3 +30,30 @@ class Nuevo_formulario:
             cursor.close()
             conn.close()
             
+class Nuevo_Paciente:
+    def __init__( self, nombres, apellido1, apellido2, telefono, celular):
+        self.nombres = nombres
+        self.apellido1 = apellido1
+        self.apellido2 = apellido2
+        self.telefono = telefono
+        self.celular = celular
+
+
+    def registrar_nuevo(self):
+        try:
+            conn = mysql.connector.connect(host = 'localhost', database = 'agenda', user = 'root', password = '')
+            if conn.is_connected:
+
+                cursor= conn.cursor()
+
+                sql = "INSERT INTO pacientes (`Nombres`, `Apellido_paterno`, `Apellido_materno`,`Telefono` ,`Celular`  ) VALUES (%s, %s , %s , %s,  %s);"
+                cursor.execute(sql,( self.nombres, self.apellido1, self.apellido2, self.telefono, self.celular))
+                conn.commit()
+
+
+        except Error as e:
+            print (e)
+        finally:
+            cursor.close()
+            conn.close()
+            

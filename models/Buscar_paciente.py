@@ -16,7 +16,7 @@ class Buscar:
                 
                 cursor = conn.cursor()
 
-                sql = "select id, Nombres, Apellido_paterno, Apellido_materno FROM pacientes WHERE Nombres LIKE %s OR Apellido_paterno LIKE %s OR Apellido_materno LIKE %s or id LIKE %s"
+                sql = "select id, Nombres, Apellido_paterno, Apellido_materno, Telefono, Celular  FROM pacientes WHERE Nombres LIKE %s OR Apellido_paterno LIKE %s OR Apellido_materno LIKE %s or id LIKE %s"
                 cursor.execute(sql,("%" + busqueda + "%","%" + busqueda + "%", "%" + busqueda + "%",  busqueda  , ))
                 datos= cursor.fetchall()
                 return datos 

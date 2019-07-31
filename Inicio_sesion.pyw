@@ -17,13 +17,15 @@ from PyQt5.QtWidgets import (QApplication,QMainWindow, QDialog, QLineEdit, QPush
 #------------------------CLASES DEL MENU PRINCIPAL----------------------------------------------#
 
 class Nueva_Cita(QDialog):
-    def __init__(self,id,nom,ap1,ap2):
+    def __init__(self,id,nom,ap1,ap2,cel,tel):
         QDialog.__init__(self)
         uic.loadUi("agregar_consulta.ui",self)
         self.id = id
         self.nombre =  nom
         self.apellido1 = ap1
         self.apellido2  = ap2
+        self.cel = cel
+        self.tel = tel
 
 
         #----------------BOTONES ---------------------------#
@@ -36,6 +38,8 @@ class Nueva_Cita(QDialog):
         self.ap1_ac.setText(self.apellido1)
         self.ap2_ac.setText(self.apellido2)
         self.id_ac.setText(self.id)
+        self.tel_ac.setText(self.tel)
+        self.cel_ac.setText(self.cel)
 
         # FUNCION QUE NOS ACTUALIZA LOS DATOS Y LOS GUARDA EN VARIABLES CADA  QUE SE CAMBIA UNA FECHA U HORA
 
@@ -73,6 +77,10 @@ class Buscar_px(QDialog):
     def __init__(self):
         QDialog. __init__(self)
         uic.loadUi("buscar_px.ui",self)
+
+        #------------------- Agregar nuevo paciente
+        self.nueva = Paciente_consulta()
+        #----------------------
  
         # Deshabilitar edición
         self.tabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -94,6 +102,10 @@ class Buscar_px(QDialog):
 #----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
         self.lineEdit_busqueda.textEdited.connect(self.busqueda)
         self.pb_agregar_nuevo_B.clicked.connect(self.progra)
+        self.pb_nuevopx.clicked.connect(self.nuevo)
+
+    def nuevo(self):
+        self.nueva.show()
 
     def busqueda(self):
         texto = self.lineEdit_busqueda.text()
@@ -123,18 +135,11 @@ class Buscar_px(QDialog):
                 nombres = data[1]
                 apellido1 = data[2]
                 apellido2 = data[3]
-                self.agregar = Nueva_Cita(id,nombres,apellido1,apellido2)
+                cel = data[4]
+                tel = data[5]
+                self.agregar = Nueva_Cita(id,nombres,apellido1,apellido2,cel,tel)
                 self.agregar.show()
                 
-                
-
-
-
-    
-    
-
-            
-        
 
 
 class Nuevo_Formulario(QMainWindow):
@@ -191,7 +196,7 @@ class Principal_Medico(QMainWindow):
         QMainWindow.__init__(self)
         uic.loadUi("medico.ui",self)
         #RELACINAR LAS CLASES CON LOS METODOS
-        self.agregar = Nueva_Cita('','','','')
+        self.agregar = Nueva_Cita('','','','','','')
         self.abrirAgenda = Abrir_Agenda()
         self.buscarpx = Buscar_px()
         self.formulario = Nuevo_Formulario()
@@ -236,7 +241,7 @@ class Principal_Asistente(QMainWindow):
         #self.pb_receta_a =  QPushButton(self)
 
         #RELACINAR LAS CLASES CON LOS METODOS
-        self.agregar = Nueva_Cita('','','','')
+        self.agregar = Nueva_Cita('','','','','','')
         self.abrirAgenda = Abrir_Agenda()
         self.buscarpx = Buscar_px()
         self.formulario = Nuevo_Formulario()
@@ -273,7 +278,7 @@ class Principal_Admin(QMainWindow):
 
 
         #RELACINAR LAS CLASES CON LOS METODOS
-        self.agregar = Nueva_Cita('','','','')
+        self.agregar = Nueva_Cita('','','','','','')
         self.abrirAgenda = Abrir_Agenda()
         self.buscarpx = Buscar_px()
         self.formulario = Nuevo_Formulario()
@@ -303,6 +308,61 @@ class Principal_Admin(QMainWindow):
 
     def historial_Clinico(self):
         self.historial.show()
+#---------------------------------------SUB PROGRAMA PARA AGREGAR PACIENTES PARA CONSULTA-----------------
+
+class Paciente_consulta(QDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        uic.loadUi("agregar_px.ui",self)
+
+        #----------------------BOTONES-----------------------#
+
+        #--------------------------ACCIONES---------------------------#
+        self.acept_ap.clicked.connect(self.registrar)
+        self.cancelar_ap.clicked.connect(self.cerrar)
+
+    
+    def cerrar(self):
+            self.nombre_ap.clear()
+            self.ap1_ap.clear()
+            self.ap2_ap.clear()
+            self.cel_ap.clear()
+            self.tel_ap.clear()
+            self.close()
+
+
+
+
+    def registrar(self):
+            self.nombre = self.nombre_ap.text()
+            self.ap1 = self.ap1_ap.text()
+            self.ap2 = self.ap2_ap.text()
+            self.celular = self.cel_ap.text()
+            self.telefono = self.tel_ap.text()
+        
+
+            if self.nombre =='':
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar un nombre", QMessageBox.Ok)
+            elif self.ap1 == '':
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar un apellido paterno", QMessageBox.Ok) 
+            elif self.ap2 == '':
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar un apellido materno", QMessageBox.Ok)
+
+            else:
+                                
+                formulario = Formulario.Nuevo_Paciente(self.nombre.lower(), self.ap1.lower(), self.ap2.lower(), self.celular, self.telefono )
+                formulario.registrar_nuevo()
+            
+                QMessageBox.information(self,"Datos guardados", "Paciente registrado con exito", QMessageBox.Ok)
+                self.nombre_ap.clear()
+                self.ap1_ap.clear()
+                self.ap2_ap.clear()
+                self.cel_ap.clear()
+                self.tel_ap.clear()
+                self.close()
+
+            
+
 
 #---------------------------------------PANTALLA PRINCIPAL, INICIO DE SESION------------------------------------#
 
