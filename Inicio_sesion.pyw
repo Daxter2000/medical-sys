@@ -189,8 +189,7 @@ class Historial(QMainWindow):
 class Principal_Medico(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        self.ui = Ui_Medico_MainWindow()
-        self.ui.setupUi(self) 
+        uic.loadUi("medico.ui",self)
         #RELACINAR LAS CLASES CON LOS METODOS
         self.agregar = Nueva_Cita('','','','')
         self.abrirAgenda = Abrir_Agenda()
@@ -200,11 +199,11 @@ class Principal_Medico(QMainWindow):
     
 
         #AGREGAR ACCIONES A LOS BOTONES DEL MENU
-        self.ui.Btn_agregarcita_m.clicked.connect(self.agregar_cita)
-        self.ui.Btn_Agenda_m.clicked.connect(self.abrir_agenda)
-        self.ui.Btn_buscarpaciente_m.clicked.connect(self.buscarPx)
-        self.ui.Btn_nuevopaciente_m.clicked.connect(self.nuevo_formulario)
-        self.ui.btn_historialclinico_m.clicked.connect(self.historial_Clinico)
+        self.Btn_agregarcita_m.clicked.connect(self.agregar_cita)
+        self.Btn_Agenda_m.clicked.connect(self.abrir_agenda)
+        self.Btn_buscarpaciente_m.clicked.connect(self.buscarPx)
+        self.Btn_nuevopaciente_m.clicked.connect(self.nuevo_formulario)
+        self.btn_historialclinico_m.clicked.connect(self.historial_Clinico)
 
 
     #-----------------------DECLARAR METODOS PARA ABRIR LAS OPCIONES DEL MENU----------------#
@@ -311,20 +310,19 @@ class Principal_Admin(QMainWindow):
 class Inicio_Sesion(QDialog):
     def __init__(self):
         QDialog.__init__(self)
-        self.ui = Ui_Iniciar_Sesion()
-        self.ui.setupUi(self)
+        uic.loadUi("inicio.ui",self)
 
 
-        self.ui.btn_aceptar_inicio.clicked.connect(self.iniciar)
-        self.ui.lineEdit_pass.setEchoMode(QLineEdit.Password)
+        self.btn_aceptar_inicio.clicked.connect(self.iniciar)
+        self.lineEdit_pass.setEchoMode(QLineEdit.Password)
 
         self.principal_medico = Principal_Medico()
         self.principal_asistente = Principal_Asistente()
         self.principal_admin = Principal_Admin()
 
     def iniciar(self):
-        user = self.ui.lineEdit_user.text()
-        passw = self.ui.lineEdit_pass.text()
+        user = self.lineEdit_user.text()
+        passw = self.lineEdit_pass.text()
         inicio = Login.Conectar('localhost','agenda','root','',user,passw)
         if inicio.logIn()=='Admin':
             self.principal_admin.show()
