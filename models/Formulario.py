@@ -1,6 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
-
+#-------------------------------------NUEVO PACIENTE SIN REGISTRO, INCLUYE TODOS LOS CAMPOS EXCEPTO CELULAR Y TELEFONO-----------------------------------------------#
 class Nuevo_formulario:
     def __init__( self, nombres, apellido1, apellido2, peso, altura, dx, estudios, medicamento):
         self.nombres = nombres
@@ -29,7 +29,7 @@ class Nuevo_formulario:
         finally:
             cursor.close()
             conn.close()
-            
+#---------------------------------NUEVO PACIENTE PARA AGENDAR UNA CITA, NO INCLUYE DIAGNOSTICO NI NADA, SOLO NOMBRE Y TELEFONO-----------------------------------------#
 class Nuevo_Paciente:
     def __init__( self, nombres, apellido1, apellido2, telefono, celular):
         self.nombres = nombres

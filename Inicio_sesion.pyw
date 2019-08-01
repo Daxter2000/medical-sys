@@ -1,5 +1,5 @@
 import sys 
-from models import Login, Formulario, Buscar_paciente, Agregar_cita
+from models import Login, Formulario, Buscar_paciente, Agregar_cita, Update
 from inicio import *
 from medico import *
 from asistente import *
@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import (QApplication,QMainWindow, QDialog, QLineEdit, QPush
 
 
 #------------------------CLASES DEL MENU PRINCIPAL----------------------------------------------#
+##--------------------   MODULO CREADO PARA ASIGNAR FECHA Y HORA A LOS PACIENTES PARA CITA MEDICA 
 
 class Nueva_Cita(QDialog):
     def __init__(self,id,nom,ap1,ap2,cel,tel):
@@ -32,6 +33,7 @@ class Nueva_Cita(QDialog):
         self.date_ac.dateChanged.connect(self.obtener_datos_pararegistrar)
         self.time_ac.timeChanged.connect(self.obtener_datos_pararegistrar)
         self.acept_ac.clicked.connect(self.nueva)
+        self.cancelar_ac.clicked.connect(self.cerrar)
 
         #---------------Rellenar los datos de los campos con los datos de la  persona seleccionada del campo buscar 
         self.nombre_ac.setText(self.nombre)
@@ -50,8 +52,7 @@ class Nueva_Cita(QDialog):
 
     def nueva(self):
         nueva_cita = Agregar_cita.Agregar(int(self.id),self.fecha, self.hora, self.datetime)
-        #nueva_cita.Nueva_cita()
-
+    
         if nueva_cita.Nueva_cita():
             QMessageBox.information(self,"Cita registrada", "Cita registrada con exito", QMessageBox.Ok)
             self.nombre_ac.clear()
@@ -60,23 +61,25 @@ class Nueva_Cita(QDialog):
             self.id_ac.clear()
             self.close()
 
-            
-
         else:
             print("intente de nuevo")
+    
+    def cerrar(self):
+        self.close()
 
-
-        
 
 class Abrir_Agenda (QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         uic.loadUi("Agenda.ui",self)
 
+#-----------------------------------  MODULO PARA BUSCAR PACIENTES  PARA AGENDAR CITA  -------------- -#
+
 class Buscar_px(QDialog):
     def __init__(self):
         QDialog. __init__(self)
         uic.loadUi("buscar_px.ui",self)
+        self.label_buscar.setText("Seleccione el paciente al cual desea programar")
 
         #------------------- Agregar nuevo paciente
         self.nueva = Paciente_consulta()
@@ -103,6 +106,12 @@ class Buscar_px(QDialog):
         self.lineEdit_busqueda.textEdited.connect(self.busqueda)
         self.pb_agregar_nuevo_B.clicked.connect(self.progra)
         self.pb_nuevopx.clicked.connect(self.nuevo)
+        self.bt_cancel.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.lineEdit_busqueda.clear()
+        self.busqueda()
+        self.close()
 
     def nuevo(self):
         self.nueva.show()
@@ -140,7 +149,7 @@ class Buscar_px(QDialog):
                 self.agregar = Nueva_Cita(id,nombres,apellido1,apellido2,cel,tel)
                 self.agregar.show()
                 
-
+#----------------------------------------MODULO PARA INICIAR CITA Y REGISTRO DE PACIENTE QUE NO ESTA REGISTRADO
 
 class Nuevo_Formulario(QMainWindow):
     def __init__(self):
@@ -196,15 +205,15 @@ class Principal_Medico(QMainWindow):
         QMainWindow.__init__(self)
         uic.loadUi("medico.ui",self)
         #RELACINAR LAS CLASES CON LOS METODOS
-        self.agregar = Nueva_Cita('','','','','','')
+        self.agregar = Buscar_Pacientes_Consulta()
         self.abrirAgenda = Abrir_Agenda()
         self.buscarpx = Buscar_px()
-        self.formulario = Nuevo_Formulario()
+        self.formulario = Paciente_consulta()
         self.historial = Historial()
     
 
         #AGREGAR ACCIONES A LOS BOTONES DEL MENU
-        self.Btn_agregarcita_m.clicked.connect(self.agregar_cita)
+        self.Btn_iniciar_consulta_m.clicked.connect(self.agregar_cita)
         self.Btn_Agenda_m.clicked.connect(self.abrir_agenda)
         self.Btn_buscarpaciente_m.clicked.connect(self.buscarPx)
         self.Btn_nuevopaciente_m.clicked.connect(self.nuevo_formulario)
@@ -293,7 +302,7 @@ class Principal_Admin(QMainWindow):
         self.pb_historial_adm.clicked.connect(self.historial_Clinico)
         
 
-    #DECLARAR METODOS PARA ABRIR LAS OPCIONES DEL MENU
+    #--------------------------DECLARAR METODOS PARA ABRIR LAS OPCIONES DEL MENU
     def agregar_cita(self):
         self.agregar.show()   
     
@@ -331,8 +340,6 @@ class Paciente_consulta(QDialog):
             self.close()
 
 
-
-
     def registrar(self):
             self.nombre = self.nombre_ap.text()
             self.ap1 = self.ap1_ap.text()
@@ -362,7 +369,132 @@ class Paciente_consulta(QDialog):
                 self.close()
 
             
+#-------------------------------------PROGRAMA PARA BUSCAR PACIENTES E INICIAR CONSULTA----------------------------#
+class Buscar_Pacientes_Consulta(QDialog):
+    def __init__(self):
+        QDialog. __init__(self)
+        uic.loadUi("buscar_px.ui",self)
+        #------------------- Agregar nuevo paciente
+        self.nueva = Paciente_consulta()
+        #----------------------
+        self.pb_agregar_nuevo_B.setText("Iniciar consulta")
+        # Deshabilitar edición
+        self.tabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # Deshabilitar el comportamiento de arrastrar y soltar
+        self.tabla.setDragDropOverwriteMode(False)
+        # Seleccionar toda la fila
+        self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # Seleccionar una fila a la vez
+        self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+        # Especifica dónde deben aparecer los puntos suspensivos "..." cuando se muestran
+        # textos que no encajan
+        self.tabla.setTextElideMode(Qt.ElideRight)# Qt.ElideNone
+        # Establecer el ajuste de palabras del texto 
+        self.tabla.setWordWrap(False)
+        # Deshabilitar clasificación
+        self.tabla.setSortingEnabled(False)
+        # Ocultar encabezado vertical
+        self.tabla.verticalHeader().setVisible(False)
+#----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+        self.lineEdit_busqueda.textEdited.connect(self.busqueda)
+        self.pb_agregar_nuevo_B.clicked.connect(self.progra)
+        self.pb_nuevopx.clicked.connect(self.nuevo)
+        self.bt_cancel.clicked.connect(self.cerrar)
 
+    def cerrar(self):
+        self.lineEdit_busqueda.clear()
+        self.busqueda()
+        self.close()
+
+    def nuevo(self):
+        self.nueva.show()
+
+    def busqueda(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+
+        self.tabla.clearContents()
+
+        row = 0
+        for endian in datos:
+            self.tabla.setRowCount(row + 1)
+                                    
+            self.tabla.setItem(row, 0, QTableWidgetItem(str(endian[0])))
+            self.tabla.setItem(row, 1, QTableWidgetItem(endian[1]))
+            self.tabla.setItem(row, 2, QTableWidgetItem(str(endian[2])))
+            self.tabla.setItem(row, 3, QTableWidgetItem(str(endian[3])))
+
+            row += 1   
+    def progra(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id = (str(data[0]))
+                nombres = data[1]
+                apellido1 = data[2]
+                apellido2 = data[3]
+                ldate = data[6]
+                self.agregar = Nuevo_Formulario_Px_Registrado(id,nombres,apellido1,apellido2)
+                self.agregar.show()
+                
+
+#-------------------------------------MODULO PARA INICIAR CONSULTA DE UN PACIENTE REGISTRADO---------------------#
+
+class Nuevo_Formulario_Px_Registrado(QMainWindow):
+    def __init__(self,id,nom,ap1,ap2):
+        QMainWindow. __init__(self)
+        uic.loadUi("formulario_con_datos.ui",self)
+        self.id = id
+        self.nombre =  nom
+        self.ap1 = ap1
+        self.ap2 = ap2
+ 
+#-------------------------- ASIGNAMOS EL VALOR QUE VIENE DEL METODO A LOS LINE EDIT PARA RELLENAR LOS DATOS
+        self.lineEdit_nombres_F.setText(self.nombre)
+        self.lineEdit_ape_pat_F.setText(self.ap1)
+        self.lineEdit_ape_mat_F.setText(self.ap2)
+        self.lineEdit_id_F.setText(self.id)
+
+
+        #----------------------------------BOTONES-----------------------------
+        self.pb_actualizar.clicked.connect(self.registrar_nuevo)
+        self.pb_cancelar.clicked.connect(self.cerrar)
+
+
+    def registrar_nuevo(self):
+            id = self.id
+            peso = self.lineEdit_peso.text()
+            altura = self.lineEdit_altura.text()
+            dx = self.plainTextEdit_Dx.toPlainText()
+            estudios = self.plainTextEdit_Estudios.toPlainText()
+            med = self.plainTextEdit_Med.toPlainText()
+            
+            if med == "":
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar el tratamiento", QMessageBox.Ok)
+            elif dx =="":
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar diagnostico", QMessageBox.Ok)
+            else:
+
+                formulario = Update.Actualizar_diagnostico(id,peso,altura,dx,estudios,med)
+                formulario.Actualizar()
+            
+                QMessageBox.information(self,"Datos guardados", "Datos del paciente guardados con exito", QMessageBox.Ok)
+                self.lineEdit_nombres_F.clear()
+                self.lineEdit_ape_pat_F.clear()
+                self.lineEdit_ape_mat_F.clear()
+                self.lineEdit_id_F.clear()
+                self.lineEdit_peso.clear()
+                self.lineEdit_altura.clear()
+                self.plainTextEdit_Dx.clear()
+                self.plainTextEdit_Estudios.clear()
+                self.plainTextEdit_Med.clear()
+
+    def cerrar(self):
+        self.close()
 
 #---------------------------------------PANTALLA PRINCIPAL, INICIO DE SESION------------------------------------#
 

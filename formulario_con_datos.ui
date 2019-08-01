@@ -46,6 +46,9 @@
      <string notr="true">
 background-color: rgb(255, 255, 255);</string>
     </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_ultima_F">
     <property name="geometry">
@@ -219,7 +222,7 @@ background-color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>330</y>
+      <y>470</y>
       <width>431</width>
       <height>81</height>
      </rect>
@@ -233,7 +236,7 @@ background-color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>300</y>
+      <y>440</y>
       <width>91</width>
       <height>21</height>
      </rect>
@@ -242,7 +245,7 @@ background-color: rgb(255, 255, 255);</string>
      <string notr="true">background-color: rgb(219, 219, 219);</string>
     </property>
     <property name="text">
-     <string>Estudios solicitados </string>
+     <string>Estudios solicitados</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
@@ -306,24 +309,24 @@ background-color: rgb(255, 255, 255);</string>
    <widget class="QPushButton" name="pb_actualizar">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>460</y>
-      <width>91</width>
+      <x>20</x>
+      <y>470</y>
+      <width>101</width>
       <height>81</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(213, 213, 213);</string>
+     <string notr="true">background-color: rgb(170, 255, 127);</string>
     </property>
     <property name="text">
-     <string>Actualizar</string>
+     <string>Guardar</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_10">
+   <widget class="QLabel" name="label_tratamiento">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>440</y>
+      <x>490</x>
+      <y>300</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -332,14 +335,14 @@ background-color: rgb(255, 255, 255);</string>
      <string notr="true">background-color: rgb(219, 219, 219);</string>
     </property>
     <property name="text">
-     <string>Medicamentos recetados</string>
+     <string>Tratamiento</string>
     </property>
    </widget>
    <widget class="QPlainTextEdit" name="plainTextEdit_Med">
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>470</y>
+      <y>340</y>
       <width>431</width>
       <height>71</height>
      </rect>
@@ -352,14 +355,14 @@ background-color: rgb(255, 255, 255);</string>
    <widget class="QPushButton" name="pb_cancelar">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>460</y>
+      <x>160</x>
+      <y>470</y>
       <width>91</width>
       <height>81</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(213, 213, 213);</string>
+     <string notr="true">background-color: rgb(243, 133, 123);</string>
     </property>
     <property name="text">
      <string>Cancelar</string>
@@ -394,6 +397,9 @@ background-color: rgb(255, 255, 255);</string>
     <property name="text">
      <string/>
     </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_12">
     <property name="geometry">
@@ -420,6 +426,9 @@ background-color: rgb(255, 255, 255);</string>
     <property name="styleSheet">
      <string notr="true">
 background-color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

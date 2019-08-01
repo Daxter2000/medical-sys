@@ -42,7 +42,7 @@
      <string>AGENDA</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Btn_agregarcita_m">
+   <widget class="QPushButton" name="Btn_iniciar_consulta_m">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -64,7 +64,7 @@
      <string notr="true">background-color: rgb(227, 227, 227);</string>
     </property>
     <property name="text">
-     <string/>
+     <string>INICIAR CONSULTA</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Btn_nuevopaciente_m">

@@ -205,10 +205,10 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>50</x>
      <y>20</y>
-     <width>201</width>
-     <height>21</height>
+     <width>461</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -220,7 +220,7 @@
     <string>background-color: rgb(227, 227, 227);</string>
    </property>
    <property name="text">
-    <string>AGREGAR CONSULTA</string>
+    <string>Ingrese los datos del paciente para su registro</string>
    </property>
   </widget>
   <widget class="QPushButton" name="acept_ap">
