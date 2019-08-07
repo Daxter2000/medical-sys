@@ -1,10 +1,5 @@
 import sys 
-from models import Login, Formulario, Buscar_paciente, Agregar_cita, Update
-from inicio import *
-from medico import *
-from asistente import *
-from admin import *
-from Historiales import Open
+from models import Login, Formulario, Buscar_paciente, Agregar_cita, Update, Historiales
 from PyQt5.QtGui import QFont, QIcon, QColor
 from PyQt5.QtCore import Qt
 import mysql.connector 
@@ -197,9 +192,8 @@ class Busqueda_historial(QDialog):
     def __init__(self):
         QDialog. __init__(self)
         uic.loadUi("Buscar_px.ui",self)
-
-        #------------------- Agregar nuevo paciente
-        #----------------------
+#------------------- Agregar nuevo paciente   #----------------------
+        self.label_buscar.setText("Seleccione el paciente para obtener Historial")
         self.pb_agregar_nuevo_B.setText("Consultar Historial")
         self.pb_nuevopx.setVisible(False)
 
@@ -230,8 +224,6 @@ class Busqueda_historial(QDialog):
         self.busqueda()
         self.close()
 
-    def nuevo(self):
-        self.nueva.show()
 #---------------------------metodo que rellena la tabla con la busqueda
     def busqueda(self):
         texto = self.lineEdit_busqueda.text()
@@ -259,54 +251,43 @@ class Busqueda_historial(QDialog):
             if row[0] == self.tabla.currentRow():
                 data = row[1]
                 id = data[0]
+                nom = data[1]
+                ap1 = data [2]
+                ap2 = data[3]
+                self.nuevo = Historial(id,nom,ap1,ap2)
+                self.nuevo.show()
 
-                self.historial = Buscar_paciente.Historial(id)
-                historial = self.historial.buscar_px()
-                for datos in enumerate (historial):
-                    info = datos[1]
-                    id = info[1]
-                    diagnostico = info[2]
-                    estudios = info[3]
-                    tratamiento = info[4]
-                    peso = info[5]
-                    altura = info[6]
-                    fecha = info[7]
                     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Historial(QMainWindow):
-    def __init__(self):
+    def __init__(self,id,nom,ap1,ap2):
         QMainWindow. __init__(self)
         uic.loadUi("Historial.ui",self)
 
+        self. id = id
+        self.nom =  nom
+        self.ap1 = ap1
+        self.ap2 = ap2
+
+#----------------------------------Agregar los valores del buscador a los campos de texto vacios
+        self.nombres.setText(self.nom)
+        self.apellido_p.setText(self.ap1)
+        self.apellido_m.setText(self.ap2)
+        self.identificador.setText(str(self.id))
+        historia = Historiales.Historial(self.id)
+        datos = historia.leer_historial()
+        self.text_historial.setPlainText(datos)
+
+        self.pb_consultar.clicked.connect(self.iniciar_consulta)
+        self.pb_cancelar.clicked.connect(self.cerrar)
+
+
+    def iniciar_consulta(self):
+        self.agregar = Nuevo_Formulario_Px_Registrado(str(self.id), self.nom, self.ap1, self.ap2)
+        self.agregar.show()
+        self.close()
+
+    def cerrar(self):
+        self.close()
 
 #------------------------------------- OPERACIONES PARA EL MEDICO------------------------------------------------#
 
@@ -364,7 +345,7 @@ class Principal_Asistente(QMainWindow):
         self.abrirAgenda = Abrir_Agenda()
         self.buscarpx = Buscar_px()
         self.formulario = Nuevo_Formulario()
-        self.historial = Historial()
+        self.historial = Busqueda_historial()
 
         #-----------------Funciones de los botones--------------------#
 
@@ -401,7 +382,7 @@ class Principal_Admin(QMainWindow):
         self.abrirAgenda = Abrir_Agenda()
         self.buscarpx = Buscar_px()
         self.formulario = Nuevo_Formulario()
-        self.historial = Historial()
+        self.historial = Busqueda_historial()
 
         #-----------------Funciones de los botones--------------------#
 
@@ -547,7 +528,6 @@ class Buscar_Pacientes_Consulta(QDialog):
                 nombres = data[1]
                 apellido1 = data[2]
                 apellido2 = data[3]
-                ldate = data[6]
                 self.agregar = Nuevo_Formulario_Px_Registrado(id,nombres,apellido1,apellido2)
                 self.agregar.show()
                 
@@ -581,15 +561,15 @@ class Nuevo_Formulario_Px_Registrado(QMainWindow):
             altura = self.lineEdit_altura.text()
             dx = self.plainTextEdit_Dx.toPlainText()
             estudios = self.plainTextEdit_Estudios.toPlainText()
-            med = self.plainTextEdit_Med.toPlainText()
+            trat = self.plainTextEdit_Med.toPlainText()
             
-            if med == "":
+            if dx == "":
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar el diagnostico", QMessageBox.Ok)
+            elif trat =="":
                 QMessageBox.warning(self,"Datos faltantes", "Falta ingresar el tratamiento", QMessageBox.Ok)
-            elif dx =="":
-                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar diagnostico", QMessageBox.Ok)
             else:
 
-                formulario = Update.Actualizar_diagnostico(id,peso,altura,dx,estudios,med)
+                formulario = Update.Actualizar_diagnostico(id,peso,altura,dx,estudios,trat)
                 formulario.Actualizar()
                 formulario.historial()
                 
@@ -604,6 +584,7 @@ class Nuevo_Formulario_Px_Registrado(QMainWindow):
                 self.plainTextEdit_Dx.clear()
                 self.plainTextEdit_Estudios.clear()
                 self.plainTextEdit_Med.clear()
+                self.close()
 
     def cerrar(self):
         self.close()

@@ -37,3 +37,45 @@ sdfsdf
 Estudios a realizar : 
 
 
+Fecha : 
+2019-08-06
+
+Hora : 
+22 : 19
+
+Altura : 
+1.78 metros 
+
+Peso : 
+57 kilogramos 
+
+Diagnostico : 
+Dolor de cabeza	
+
+Tratamiento : 
+Paracetamol 26 mg
+
+Estudios a realizar : 
+Resonancia Magnetica
+
+Fecha : 
+2019-08-06
+
+Hora : 
+22 : 42
+
+Altura : 
+1.70 metros 
+
+Peso : 
+70 kilogramos 
+
+Diagnostico : 
+Llora mucho
+
+Tratamiento : 
+unos putazos
+
+Estudios a realizar : 
+nelson
+

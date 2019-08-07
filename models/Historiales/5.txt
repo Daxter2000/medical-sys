@@ -46,3 +46,45 @@ sdfsdf
 Estudios a realizar : 
 sfgsdf
 
+Fecha : 
+2019-08-06
+
+Hora : 
+22 : 44
+
+Altura : 
+23 metros 
+
+Peso : 
+34 kilogramos 
+
+Diagnostico : 
+asdfgasdf
+
+Tratamiento : 
+sfgsdf
+
+Estudios a realizar : 
+sdfsdf
+
+Fecha : 
+2019-08-06
+
+Hora : 
+22 : 53
+
+Altura : 
+34 metros 
+
+Peso : 
+23 kilogramos 
+
+Diagnostico : 
+sdfsdf
+
+Tratamiento : 
+sdfsd
+
+Estudios a realizar : 
+fsdf
+
