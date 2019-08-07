@@ -4,6 +4,7 @@ from inicio import *
 from medico import *
 from asistente import *
 from admin import *
+from Historiales import Open
 from PyQt5.QtGui import QFont, QIcon, QColor
 from PyQt5.QtCore import Qt
 import mysql.connector 
@@ -192,6 +193,115 @@ class Nuevo_Formulario(QMainWindow):
 
 
 
+class Busqueda_historial(QDialog):
+    def __init__(self):
+        QDialog. __init__(self)
+        uic.loadUi("Buscar_px.ui",self)
+
+        #------------------- Agregar nuevo paciente
+        #----------------------
+        self.pb_agregar_nuevo_B.setText("Consultar Historial")
+        self.pb_nuevopx.setVisible(False)
+
+        # Deshabilitar edición
+        self.tabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # Deshabilitar el comportamiento de arrastrar y soltar
+        self.tabla.setDragDropOverwriteMode(False)
+        # Seleccionar toda la fila
+        self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # Seleccionar una fila a la vez
+        self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+        # Especifica dónde deben aparecer los puntos suspensivos "..." cuando se muestran
+        # textos que no encajan
+        self.tabla.setTextElideMode(Qt.ElideRight)# Qt.ElideNone
+        # Establecer el ajuste de palabras del texto 
+        self.tabla.setWordWrap(False)
+        # Deshabilitar clasificación
+        self.tabla.setSortingEnabled(False)
+        # Ocultar encabezado vertical
+        self.tabla.verticalHeader().setVisible(False)
+#----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+        self.lineEdit_busqueda.textEdited.connect(self.busqueda)
+        self.pb_agregar_nuevo_B.clicked.connect(self.progra)
+        self.bt_cancel.clicked.connect(self.cerrar)
+
+    def cerrar(self):
+        self.lineEdit_busqueda.clear()
+        self.busqueda()
+        self.close()
+
+    def nuevo(self):
+        self.nueva.show()
+#---------------------------metodo que rellena la tabla con la busqueda
+    def busqueda(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+
+        self.tabla.clearContents()
+
+        row = 0
+        for endian in datos:
+            self.tabla.setRowCount(row + 1)
+                                    
+            self.tabla.setItem(row, 0, QTableWidgetItem(str(endian[0])))
+            self.tabla.setItem(row, 1, QTableWidgetItem(endian[1]))
+            self.tabla.setItem(row, 2, QTableWidgetItem(str(endian[2])))
+            self.tabla.setItem(row, 3, QTableWidgetItem(str(endian[3])))
+
+            row += 1 
+            #--------------------------------METODO  
+    def progra(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id = data[0]
+
+                self.historial = Buscar_paciente.Historial(id)
+                historial = self.historial.buscar_px()
+                for datos in enumerate (historial):
+                    info = datos[1]
+                    id = info[1]
+                    diagnostico = info[2]
+                    estudios = info[3]
+                    tratamiento = info[4]
+                    peso = info[5]
+                    altura = info[6]
+                    fecha = info[7]
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Historial(QMainWindow):
     def __init__(self):
         QMainWindow. __init__(self)
@@ -209,7 +319,7 @@ class Principal_Medico(QMainWindow):
         self.abrirAgenda = Abrir_Agenda()
         self.buscarpx = Buscar_px()
         self.formulario = Paciente_consulta()
-        self.historial = Historial()
+        self.historial = Busqueda_historial()
     
 
         #AGREGAR ACCIONES A LOS BOTONES DEL MENU
@@ -481,6 +591,8 @@ class Nuevo_Formulario_Px_Registrado(QMainWindow):
 
                 formulario = Update.Actualizar_diagnostico(id,peso,altura,dx,estudios,med)
                 formulario.Actualizar()
+                formulario.historial()
+                
             
                 QMessageBox.information(self,"Datos guardados", "Datos del paciente guardados con exito", QMessageBox.Ok)
                 self.lineEdit_nombres_F.clear()

@@ -1,0 +1,15 @@
+Altura : 
+ metros 
+
+Peso : 
+ kilogramos 
+
+Diagnostico : 
+Catarro nivel 20
+
+Tratamiento : 
+Pastillas de nitrofutantoina 
+
+Estudios a realizar : 
+dfs
+

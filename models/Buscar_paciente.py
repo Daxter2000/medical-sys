@@ -26,28 +26,24 @@ class Buscar:
             cursor.close()
             conn.close()
 
-    def programar_cita(self):
-        try:
-            conn = mysql.connector.connect(host='localhost',
-                                        database='agenda',
-                                        user='root',
-                                        password='')
 
-            if conn.is_connected(): 
-                #print('Connected to MySQL database')
-                cursor = conn.cursor()
-                cursor.execute("SELECT * FROM pacientes")
-                datos = cursor.fetchall()    
-                for row in enumerate (datos):
-                    if row[0] == self.tabla.currentRow():
-                        data = row[1]
-                        return data
-
-        except Error as e:
-            print(e)
-            #QMessageBox.warning(self,"Eror", e , QMessageBox.Discard )
-    
-        finally:
-            cursor.close()
-            conn.close()
-
+class Historial:
+        def __init__(self, id):
+            self.id = id
+        
+        def buscar_px(self):
+            id = self.id 
+            try:
+                conn =  mysql.connector.connect(host= 'localhost', database = 'agenda', user= 'root', password= '')
+                if conn.is_connected:                  
+                    cursor = conn.cursor()
+                    sql = 'SELECT  * FROM historial WHERE id_px = %s ;'
+                    cursor.execute(sql,(id,))
+                    datos= cursor.fetchall()
+                    conn.commit()
+                    return datos 
+            except Error as e:
+                print(e)
+            finally:
+                cursor.close()
+                conn.close()

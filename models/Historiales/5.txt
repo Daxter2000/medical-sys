@@ -1,0 +1,48 @@
+Altura : 
+234 metros 
+
+Peso : 
+345 kilogramos 
+
+Diagnostico : 
+Asoleado
+
+Tratamiento : 
+Electrolitos
+
+Estudios a realizar : 
+eco
+
+Altura : 
+345 metros 
+
+Peso : 
+56 kilogramos 
+
+Diagnostico : 
+Hepatitis B	
+
+Tratamiento : 
+Aciclovir
+
+Estudios a realizar : 
+sangre
+
+Fecha : 
+2019-08-06
+
+Altura : 
+234 metros 
+
+Peso : 
+345 kilogramos 
+
+Diagnostico : 
+sdfsdf
+
+Tratamiento : 
+sdfsdf
+
+Estudios a realizar : 
+sfgsdf
+

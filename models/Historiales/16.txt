@@ -1,0 +1,39 @@
+Fecha : 
+2019-08-06
+
+Altura : 
+ metros 
+
+Peso : 
+ kilogramos 
+
+Diagnostico : 
+dfgsdf
+
+Tratamiento : 
+wertwe
+
+Estudios a realizar : 
+
+
+Fecha : 
+2019-08-06
+
+Hora : 
+20 : 34
+
+Altura : 
+ metros 
+
+Peso : 
+ kilogramos 
+
+Diagnostico : 
+sdfsd
+
+Tratamiento : 
+sdfsdf
+
+Estudios a realizar : 
+
+
