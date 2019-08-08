@@ -88,3 +88,66 @@ sdfsd
 Estudios a realizar : 
 fsdf
 
+Fecha : 
+2019-08-07
+
+Hora : 
+15 : 14
+
+Altura : 
+243 metros 
+
+Peso : 
+34 kilogramos 
+
+Diagnostico : 
+Esta guapo
+
+Tratamiento : 
+Nada
+
+Estudios a realizar : 
+nada
+
+Fecha : 
+2019-08-08
+
+Hora : 
+1 : 4
+
+Altura : 
+234 metros 
+
+Peso : 
+45 kilogramos 
+
+Diagnostico : 
+sdfgsdf
+
+Tratamiento : 
+sdfgsdfg
+
+Estudios a realizar : 
+nonono
+
+Fecha : 
+2019-08-08
+
+Hora : 
+1 : 13
+
+Altura : 
+345 metros 
+
+Peso : 
+34 kilogramos 
+
+Diagnostico : 
+sdfgsdfs
+
+Tratamiento : 
+sfgsf
+
+Estudios a realizar : 
+fs
+

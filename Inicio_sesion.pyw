@@ -1,5 +1,5 @@
 import sys 
-from models import Login, Formulario, Buscar_paciente, Agregar_cita, Update, Historiales
+from models import Login, Formulario, Buscar_paciente, Agregar_cita, Update, Historiales,Descargar_citas
 from PyQt5.QtGui import QFont, QIcon, QColor
 from PyQt5.QtCore import Qt
 import mysql.connector 
@@ -43,11 +43,11 @@ class Nueva_Cita(QDialog):
 
     def obtener_datos_pararegistrar(self):
         self.fecha = self.date_ac.date().toString("yyyy-MM-dd")
-        self.hora = self.time_ac.time().toString("HH-mm-ss")
-        self.datetime = self.fecha + " " + self.hora
+        self.hora = self.time_ac.time().toString("HH:mm:ss")
 
+        #self.datetime = self.fecha + " " + self.hora
     def nueva(self):
-        nueva_cita = Agregar_cita.Agregar(int(self.id),self.fecha, self.hora, self.datetime)
+        nueva_cita = Agregar_cita.Agregar(int(self.id),self.fecha, self.hora, self.nombre, self.apellido1, self.apellido2)
     
         if nueva_cita.Nueva_cita():
             QMessageBox.information(self,"Cita registrada", "Cita registrada con exito", QMessageBox.Ok)
@@ -64,10 +64,232 @@ class Nueva_Cita(QDialog):
         self.close()
 
 
+class Nueva_Cita_con_fecha(QDialog):
+        def __init__(self,id,nom,ap1,ap2,cel,tel,fecha):
+            QDialog.__init__(self)
+            uic.loadUi("agregar_consulta.ui",self)
+            self.id = id
+            self.nombre =  nom
+            self.apellido1 = ap1
+            self.apellido2  = ap2
+            self.cel = cel
+            self.tel = tel
+            self.fecha = fecha
+    
+    
+            #----------------BOTONES ---------------------------#
+            self.date_ac.dateChanged.connect(self.obtener_datos_pararegistrar)
+            self.time_ac.timeChanged.connect(self.obtener_datos_pararegistrar)
+            self.acept_ac.clicked.connect(self.nueva)
+            self.cancelar_ac.clicked.connect(self.cerrar)
+    
+            #---------------Rellenar los datos de los campos con los datos de la  persona seleccionada del campo buscar 
+            self.nombre_ac.setText(self.nombre)
+            self.ap1_ac.setText(self.apellido1)
+            self.ap2_ac.setText(self.apellido2)
+            self.id_ac.setText(self.id)
+            self.tel_ac.setText(self.tel)
+            self.cel_ac.setText(self.cel)
+            self.date_ac.setDate(self.fecha)
+    
+            # FUNCION QUE NOS ACTUALIZA LOS DATOS Y LOS GUARDA EN VARIABLES CADA  QUE SE CAMBIA UNA FECHA U HORA
+    
+        def obtener_datos_pararegistrar(self):
+            self.fecha = self.date_ac.date().toString("yyyy-MM-dd")
+            self.hora = self.time_ac.time().toString("HH:mm:ss")
+    
+            #self.datetime = self.fecha + " " + self.hora
+        def nueva(self):
+            nueva_cita = Agregar_cita.Agregar(int(self.id),self.fecha, self.hora, self.nombre, self.apellido1, self.apellido2)
+        
+            if nueva_cita.Nueva_cita():
+                QMessageBox.information(self,"Cita registrada", "Cita registrada con exito", QMessageBox.Ok)
+                self.nombre_ac.clear()
+                self.ap1_ac.clear()
+                self.ap2_ac.clear()
+                self.id_ac.clear()
+                self.close()
+    
+            else:
+                print("intente de nuevo")
+        
+        def cerrar(self):
+            self.close()
+
 class Abrir_Agenda (QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         uic.loadUi("Agenda.ui",self)
+
+        self.calendarWidget.selectionChanged.connect(self.Obtener_fecha)
+        self.pb_iniciar.clicked.connect(self.iniciar_cita)
+        self.pb_eliminar.clicked.connect(self.eliminar_cita)
+        self.pb_revision.clicked.connect(self.revision_sin_cita)
+        self.pb_agregar.clicked.connect(self.programar_cita)
+        self.pb_volver.clicked.connect(self.volver)
+
+                # Deshabilitar edición
+        self.tabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+                # Deshabilitar el comportamiento de arrastrar y soltar
+        self.tabla.setDragDropOverwriteMode(False)
+                # Seleccionar toda la fila
+        self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+                # Seleccionar una fila a la vez
+        self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+                # Especifica dónde deben aparecer los puntos suspensivos "..." cuando se muestran
+                # textos que no encajan
+        self.tabla.setTextElideMode(Qt.ElideRight)# Qt.ElideNone
+                # Establecer el ajuste de palabras del texto 
+        self.tabla.setWordWrap(False)
+                # Deshabilitar clasificación
+        self.tabla.setSortingEnabled(False)
+                # Ocultar encabezado vertical
+        self.tabla.verticalHeader().setVisible(False)
+
+
+    def Obtener_fecha(self):
+        fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
+        nuevo = Descargar_citas.Consultar_citas(fecha)
+        datos = nuevo.obtener_bd()
+
+
+        self.tabla.clearContents()
+
+        row = 0
+        for endian in datos:
+            self.tabla.setRowCount(row + 1)
+                                        
+            self.tabla.setItem(row, 0, QTableWidgetItem(str(endian[0])))
+            self.tabla.setItem(row, 1, QTableWidgetItem(str(endian[2])))
+            self.tabla.setItem(row, 2, QTableWidgetItem(str(endian[3])))
+            self.tabla.setItem(row, 3, QTableWidgetItem(str(endian[4])))
+            self.tabla.setItem(row, 4, QTableWidgetItem(str(endian[5])))
+   
+            row += 1  
+
+    def iniciar_cita(self):
+        fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
+        nuevo = Descargar_citas.Consultar_citas(fecha)
+        datos = nuevo.obtener_bd()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id = str(data[0])
+                nombres = data[3]
+                ap1 = data[4]
+                ap2 = data[5]
+                self.nuevo = Nuevo_Formulario_Px_Registrado(id,nombres,ap1,ap2)
+                self.nuevo.show()
+
+    
+    def eliminar_cita(self):
+        fecha = self.calendarWidget.selectedDate().toString("yyyy-MM-dd")
+        nuevo = Descargar_citas.Consultar_citas(fecha)
+        datos = nuevo.obtener_bd()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id_cita = data[7]
+                respuesta = QMessageBox.question(self,"Borrar cita", "¿ Esta seguro de borrar la cita ?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                if respuesta == QMessageBox.Yes:
+                    nuevo = Descargar_citas.Consultar_citas(id_cita)
+                    nuevo.eliminar()
+                    self.Obtener_fecha()
+                if respuesta == QMessageBox.No : 
+                    self.Obtener_fecha()                    
+
+    def revision_sin_cita(self):
+        self.nuevo =  Buscar_Pacientes_Consulta()
+        self.nuevo.show()
+        self.close()
+
+    def programar_cita(self):
+        fecha = self.calendarWidget.selectedDate()
+        self.nuevo = Buscar_px_con_fecha(fecha)
+        self.nuevo.show()
+
+    def volver(self):
+        self.calendarWidget.showToday()
+        self.close()
+        
+
+
+class Buscar_px_con_fecha(QDialog):
+    def __init__(self,fecha):
+        QDialog. __init__(self)
+        uic.loadUi("buscar_px.ui",self)
+        self.label_buscar.setText("Seleccione el paciente al cual desea programar")
+        self.fecha = fecha
+
+        #------------------- Agregar nuevo paciente
+        self.nueva = Paciente_consulta()
+        #----------------------
+ 
+        # Deshabilitar edición
+        self.tabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # Deshabilitar el comportamiento de arrastrar y soltar
+        self.tabla.setDragDropOverwriteMode(False)
+        # Seleccionar toda la fila
+        self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # Seleccionar una fila a la vez
+        self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+        # Especifica dónde deben aparecer los puntos suspensivos "..." cuando se muestran
+        # textos que no encajan
+        self.tabla.setTextElideMode(Qt.ElideRight)# Qt.ElideNone
+        # Establecer el ajuste de palabras del texto 
+        self.tabla.setWordWrap(False)
+        # Deshabilitar clasificación
+        self.tabla.setSortingEnabled(False)
+        # Ocultar encabezado vertical
+        self.tabla.verticalHeader().setVisible(False)
+#----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+        self.lineEdit_busqueda.textEdited.connect(self.busqueda)
+        self.pb_agregar_nuevo_B.clicked.connect(self.progra)
+        self.pb_nuevopx.clicked.connect(self.nuevo)
+        self.bt_cancel.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.lineEdit_busqueda.clear()
+        self.busqueda()
+        self.close()
+
+    def nuevo(self):
+        self.nueva.show()
+
+    def busqueda(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+
+        self.tabla.clearContents()
+
+        row = 0
+        for endian in datos:
+            self.tabla.setRowCount(row + 1)
+                                    
+            self.tabla.setItem(row, 0, QTableWidgetItem(str(endian[0])))
+            self.tabla.setItem(row, 1, QTableWidgetItem(endian[1]))
+            self.tabla.setItem(row, 2, QTableWidgetItem(str(endian[2])))
+            self.tabla.setItem(row, 3, QTableWidgetItem(str(endian[3])))
+
+            row += 1   
+    def progra(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id = (str(data[0]))
+                nombres = data[1]
+                apellido1 = data[2]
+                apellido2 = data[3]
+                cel = data[4]
+                tel = data[5]
+                self.agregar = Nueva_Cita_con_fecha(id,nombres,apellido1,apellido2,cel,tel,self.fecha)
+                self.agregar.show()
+                self.close()
+
 
 #-----------------------------------  MODULO PARA BUSCAR PACIENTES  PARA AGENDAR CITA  -------------- -#
 
@@ -144,6 +366,9 @@ class Buscar_px(QDialog):
                 tel = data[5]
                 self.agregar = Nueva_Cita(id,nombres,apellido1,apellido2,cel,tel)
                 self.agregar.show()
+                self.close()
+
+
                 
 #----------------------------------------MODULO PARA INICIAR CITA Y REGISTRO DE PACIENTE QUE NO ESTA REGISTRADO
 

@@ -235,6 +235,27 @@
    <property name="styleSheet">
     <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
+   <property name="minimumDate">
+    <date>
+     <year>2019</year>
+     <month>8</month>
+     <day>1</day>
+    </date>
+   </property>
+   <property name="maximumTime">
+    <time>
+     <hour>23</hour>
+     <minute>59</minute>
+     <second>59</second>
+    </time>
+   </property>
+   <property name="minimumTime">
+    <time>
+     <hour>7</hour>
+     <minute>0</minute>
+     <second>0</second>
+    </time>
+   </property>
   </widget>
   <widget class="QTimeEdit" name="time_ac">
    <property name="geometry">
@@ -247,6 +268,20 @@
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="maximumTime">
+    <time>
+     <hour>22</hour>
+     <minute>59</minute>
+     <second>59</second>
+    </time>
+   </property>
+   <property name="minimumTime">
+    <time>
+     <hour>7</hour>
+     <minute>0</minute>
+     <second>0</second>
+    </time>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
