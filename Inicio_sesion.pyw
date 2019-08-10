@@ -1,5 +1,6 @@
 import sys 
-from models import Login, Formulario, Buscar_paciente, Agregar_cita, Update, Historiales,Descargar_citas
+from models import (Login, Formulario, Buscar_paciente, Agregar_cita, Update, Historiales,Descargar_citas,
+                    modificar_usuario, Descargar_usuarios, Insertar_usuario)
 from PyQt5.QtGui import QFont, QIcon, QColor
 from PyQt5.QtCore import Qt
 import mysql.connector 
@@ -242,7 +243,7 @@ class Buscar_px_con_fecha(QDialog):
         self.tabla.setSortingEnabled(False)
         # Ocultar encabezado vertical
         self.tabla.verticalHeader().setVisible(False)
-#----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+    #----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
         self.lineEdit_busqueda.textEdited.connect(self.busqueda)
         self.pb_agregar_nuevo_B.clicked.connect(self.progra)
         self.pb_nuevopx.clicked.connect(self.nuevo)
@@ -291,7 +292,7 @@ class Buscar_px_con_fecha(QDialog):
                 self.close()
 
 
-#-----------------------------------  MODULO PARA BUSCAR PACIENTES  PARA AGENDAR CITA  -------------- -#
+    #-----------------------------------  MODULO PARA BUSCAR PACIENTES  PARA AGENDAR CITA  -------------- -#
 
 class Buscar_px(QDialog):
     def __init__(self):
@@ -320,7 +321,7 @@ class Buscar_px(QDialog):
         self.tabla.setSortingEnabled(False)
         # Ocultar encabezado vertical
         self.tabla.verticalHeader().setVisible(False)
-#----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+    #----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
         self.lineEdit_busqueda.textEdited.connect(self.busqueda)
         self.pb_agregar_nuevo_B.clicked.connect(self.progra)
         self.pb_nuevopx.clicked.connect(self.nuevo)
@@ -370,7 +371,7 @@ class Buscar_px(QDialog):
 
 
                 
-#----------------------------------------MODULO PARA INICIAR CITA Y REGISTRO DE PACIENTE QUE NO ESTA REGISTRADO
+    #----------------------------------------MODULO PARA INICIAR CITA Y REGISTRO DE PACIENTE QUE NO ESTA REGISTRADO
 
 class Nuevo_Formulario(QMainWindow):
     def __init__(self):
@@ -417,7 +418,7 @@ class Busqueda_historial(QDialog):
     def __init__(self):
         QDialog. __init__(self)
         uic.loadUi("Buscar_px.ui",self)
-#------------------- Agregar nuevo paciente   #----------------------
+        #------------------- Agregar nuevo paciente   #----------------------
         self.label_buscar.setText("Seleccione el paciente para obtener Historial")
         self.pb_agregar_nuevo_B.setText("Consultar Historial")
         self.pb_nuevopx.setVisible(False)
@@ -439,7 +440,7 @@ class Busqueda_historial(QDialog):
         self.tabla.setSortingEnabled(False)
         # Ocultar encabezado vertical
         self.tabla.verticalHeader().setVisible(False)
-#----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+    #----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
         self.lineEdit_busqueda.textEdited.connect(self.busqueda)
         self.pb_agregar_nuevo_B.clicked.connect(self.progra)
         self.bt_cancel.clicked.connect(self.cerrar)
@@ -449,7 +450,7 @@ class Busqueda_historial(QDialog):
         self.busqueda()
         self.close()
 
-#---------------------------metodo que rellena la tabla con la busqueda
+    #---------------------------metodo que rellena la tabla con la busqueda
     def busqueda(self):
         texto = self.lineEdit_busqueda.text()
         nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
@@ -488,12 +489,12 @@ class Historial(QMainWindow):
         QMainWindow. __init__(self)
         uic.loadUi("Historial.ui",self)
 
-        self. id = id
+        self.id = id
         self.nom =  nom
         self.ap1 = ap1
         self.ap2 = ap2
 
-#----------------------------------Agregar los valores del buscador a los campos de texto vacios
+    #----------------------------------Agregar los valores del buscador a los campos de texto vacios
         self.nombres.setText(self.nom)
         self.apellido_p.setText(self.ap1)
         self.apellido_m.setText(self.ap2)
@@ -514,7 +515,353 @@ class Historial(QMainWindow):
     def cerrar(self):
         self.close()
 
-#------------------------------------- OPERACIONES PARA EL MEDICO------------------------------------------------#
+
+class Configuracion(QDialog):
+    def __init__(self):
+        QDialog. __init__(self)
+        uic.loadUi("Config.ui",self)
+        self.pb_modif.clicked.connect(self.config)
+        self.pb_admin_users.clicked.connect(self.modificar)
+
+    def modificar(self):
+        self.modif = Modificar_usuarios()
+        self.modif.show()
+
+    def config(self):
+        self.nuevo = Buscar_para_configurar()
+        self.nuevo.show()
+
+
+class Buscar_para_configurar(QDialog):
+    def __init__(self):
+        QDialog. __init__(self)
+        uic.loadUi("buscar_px.ui",self)
+        self.label_buscar.setText("Seleccione el paciente al cual desea configurar")
+
+        #------------------- Agregar nuevo paciente
+        self.nueva = Paciente_consulta()
+        #----------------------
+ 
+        # Deshabilitar edición
+        self.tabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # Deshabilitar el comportamiento de arrastrar y soltar
+        self.tabla.setDragDropOverwriteMode(False)
+        # Seleccionar toda la fila
+        self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # Seleccionar una fila a la vez
+        self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+        # Especifica dónde deben aparecer los puntos suspensivos "..." cuando se muestran
+        # textos que no encajan
+        self.tabla.setTextElideMode(Qt.ElideRight)# Qt.ElideNone
+        # Establecer el ajuste de palabras del texto 
+        self.tabla.setWordWrap(False)
+        # Deshabilitar clasificación
+        self.tabla.setSortingEnabled(False)
+        # Ocultar encabezado vertical
+        self.tabla.verticalHeader().setVisible(False)
+    #----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+        self.lineEdit_busqueda.textEdited.connect(self.busqueda)
+        self.pb_agregar_nuevo_B.clicked.connect(self.progra)
+        self.pb_nuevopx.clicked.connect(self.nuevo)
+        self.bt_cancel.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.lineEdit_busqueda.clear()
+        self.busqueda()
+        self.close()
+
+    def nuevo(self):
+        self.nueva.show()
+
+    def busqueda(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+
+        self.tabla.clearContents()
+
+        row = 0
+        for endian in datos:
+            self.tabla.setRowCount(row + 1)
+                                    
+            self.tabla.setItem(row, 0, QTableWidgetItem(str(endian[0])))
+            self.tabla.setItem(row, 1, QTableWidgetItem(endian[1]))
+            self.tabla.setItem(row, 2, QTableWidgetItem(str(endian[2])))
+            self.tabla.setItem(row, 3, QTableWidgetItem(str(endian[3])))
+
+            row += 1   
+    def progra(self):
+        texto = self.lineEdit_busqueda.text()
+        nueva_busqueda = Buscar_paciente.Buscar(texto.lower(), self.tabla)
+        datos = nueva_busqueda.buscar_px()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id = (str(data[0]))
+                nombres = data[1]
+                apellido1 = data[2]
+                apellido2 = data[3]
+                cel = data[4]
+                tel = data[5]
+                self.configurar = Modificar_nombre(id,nombres,apellido1,apellido2,tel,cel)
+                self.configurar.show()
+                self.close()
+
+
+class Modificar_nombre(QDialog):
+    def __init__(self,id, nom, ap1, ap2, tel, cel):
+        QDialog.__init__(self)
+        uic.loadUi("agregar_px.ui",self)
+        self.id = id
+        self.nombre = nom
+        self.apellido_p = ap1
+        self.apellido_m =  ap2
+        self.telefono = tel
+        self.celular = cel
+
+        self.nombre_ap.setText(self.nombre)
+        self.ap1_ap.setText(self.apellido_p)
+        self.ap2_ap.setText(self.apellido_m)
+        self.cel_ap.setText(self.telefono)
+        self.tel_ap.setText(self.celular)
+
+        #----------------------BOTONES-----------------------#
+
+        #--------------------------ACCIONES---------------------------#
+        self.acept_ap.clicked.connect(self.registrar)
+        self.cancelar_ap.clicked.connect(self.cerrar)
+
+    
+    def cerrar(self):
+            self.nombre_ap.clear()
+            self.ap1_ap.clear()
+            self.ap2_ap.clear()
+            self.cel_ap.clear()
+            self.tel_ap.clear()
+            self.close()
+
+    def registrar(self):
+            self.nombre = self.nombre_ap.text()
+            self.ap1 = self.ap1_ap.text()
+            self.ap2 = self.ap2_ap.text()
+            self.celular = self.cel_ap.text()
+            self.telefono = self.tel_ap.text()
+        
+
+            if self.nombre =='':
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar un nombre", QMessageBox.Ok)
+            elif self.ap1 == '':
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar un apellido paterno", QMessageBox.Ok) 
+            elif self.ap2 == '':
+                QMessageBox.warning(self,"Datos faltantes", "Falta ingresar un apellido materno", QMessageBox.Ok)
+
+            else:
+                                
+                formulario = modificar_usuario.Modificar(self.id, self.nombre.lower(), self.ap1.lower(), self.ap2.lower(), self.telefono, self.celular )
+                formulario.cambiar()
+            
+                QMessageBox.information(self,"Datos guardados", "Paciente registrado con exito", QMessageBox.Ok)
+                self.nombre_ap.clear()
+                self.ap1_ap.clear()
+                self.ap2_ap.clear()
+                self.cel_ap.clear()
+                self.tel_ap.clear()
+                self.close()
+
+class Modificar_usuarios(QDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        uic.loadUi("usuarios.ui",self)
+
+                # Deshabilitar edición
+        self.tabla.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # Deshabilitar el comportamiento de arrastrar y soltar
+        self.tabla.setDragDropOverwriteMode(False)
+        # Seleccionar toda la fila
+        self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # Seleccionar una fila a la vez
+        self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+        # Especifica dónde deben aparecer los puntos suspensivos "..." cuando se muestran
+        # textos que no encajan
+        self.tabla.setTextElideMode(Qt.ElideRight)# Qt.ElideNone
+        # Establecer el ajuste de palabras del texto 
+        self.tabla.setWordWrap(False)
+        # Deshabilitar clasificación
+        self.tabla.setSortingEnabled(False)
+        # Ocultar encabezado vertical
+        self.tabla.verticalHeader().setVisible(False)
+
+        self.pb_modificar.clicked.connect(self.progra)
+        self.pb_nuevo.clicked.connect(self.nuevo)
+        self.pb_cancelar.clicked.connect(self.cerrar)
+        self.pb_borrar.clicked.connect(self.borrar)
+
+        self.busqueda()
+
+    def nuevo(self):
+        self.nueva = agregar_usuario()
+        self.nueva.show()
+        self.close()
+    
+    def cerrar(self):
+        self.close()
+
+    def busqueda(self):
+        nueva_busqueda = Descargar_usuarios.Descargar_usuarios()
+        datos = nueva_busqueda.obtener_bd()
+        self.tabla.clearContents()
+
+        row = 0
+        for endian in datos:
+            self.tabla.setRowCount(row + 1)
+                                    
+            self.tabla.setItem(row, 0, QTableWidgetItem(str(endian[1])))
+            self.tabla.setItem(row, 1, QTableWidgetItem(endian[2]))
+            self.tabla.setItem(row, 2, QTableWidgetItem(str(endian[3])))
+
+            row += 1   
+    def progra(self):
+        nueva_busqueda = Descargar_usuarios.Descargar_usuarios()
+        datos = nueva_busqueda.obtener_bd()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id = (str(data[0]))
+                user = data[1]
+                funcion = data[3] 
+                self.configurar = actualizar_usuario(user,funcion,id)
+                self.configurar.show()
+                self.close()
+
+    def borrar(self):
+        nueva_busqueda = Descargar_usuarios.Descargar_usuarios()
+        datos = nueva_busqueda.obtener_bd()
+        for row in enumerate (datos):
+            if row[0] == self.tabla.currentRow():
+                data = row[1]
+                id = (str(data[0]))
+                respuesta = QMessageBox.question(self,"Borrar usuario", "¿ Esta seguro de borrar al usuario ?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                if respuesta == QMessageBox.Yes:
+                    nuevo = Insertar_usuario.Borrar(id)
+                    nuevo.borrar()
+                    self.busqueda()
+                if respuesta == QMessageBox.No : 
+                    self.busqueda() 
+
+
+        #------------------------------------- OPERACIONES PARA EL MEDICO------------------------------------------------#
+
+class agregar_usuario(QDialog):
+    def __init__(self):
+        QDialog. __init__(self)
+        uic.loadUi("agregar_usuario.ui",self)
+
+
+        self.pb_aceptar.clicked.connect(self.agregar)
+        self.pb_cancelar.clicked.connect(self.cancelar)
+
+    def cancelar(self):
+        self.close()
+
+
+    def agregar(self):
+
+
+            user = self.usuario.text()
+            pass1 = self.pass1.text()
+            pass2 = self.pass2.text()
+
+            if user == '':
+                QMessageBox.warning(self,"Faltan datos", "El campo usuario es obligatorio", QMessageBox.Ok)
+            elif pass1 == '':
+                QMessageBox.warning(self,"Faltan datos", "El campo contraseña es obligatorio", QMessageBox.Ok)
+                
+            elif pass2 == '':
+                QMessageBox.warning(self,"Faltan datos", "Es necesario repetir la contraseña", QMessageBox.Ok)
+                
+            
+            elif self.Admin.isChecked():
+                self.funcion = 'Admin'
+            
+            elif self.Medico.isChecked():
+                self.funcion = 'Medico'
+            
+            elif self.Asistente.isChecked():
+                self.funcion = 'Asistente'
+                
+            elif pass1 != pass2:
+                QMessageBox.warning(self,"Contraseña incorrecta", "Las constraseñas no coinciden", QMessageBox.Ok)
+            
+
+            if pass1 == pass2 and pass1 !='' and pass2 != '':
+                nuevo = Insertar_usuario.Insertar(str(user),str(pass1),self.funcion)
+                if nuevo.insertar():
+                    QMessageBox.information(self,"Usuario guardado", "El usuario ha sido registrado con exito", QMessageBox.Ok)
+                    self.close()
+
+
+class actualizar_usuario(QDialog):
+    def __init__(self,user,funcion,id):
+        QDialog.__init__(self)
+        uic.loadUi("agregar_usuario.ui",self)
+        self.user = user
+        self.funcion = funcion
+        self.id = id 
+
+        #---------------------------- Colocando los valores en los line edit ---------------------#
+
+        self.usuario.setText(self.user)
+
+        if self.funcion == 'Admin':
+            self.Admin.setChecked(True)
+        elif self.funcion == 'Medico':
+            self.Medico.setChecked(True)
+        elif self.funcion == "Asistente":
+            self.Asistente.setChecked(True)
+
+
+        self.pb_aceptar.clicked.connect(self.agregar)
+        self.pb_cancelar.clicked.connect(self.cancelar)
+
+    
+    def cancelar(self):
+        self.close()
+
+    def agregar(self):
+
+
+            user = self.usuario.text()
+            pass1 = self.pass1.text()
+            pass2 = self.pass2.text()
+
+            if user == '':
+                QMessageBox.warning(self,"Faltan datos", "El campo usuario es obligatorio", QMessageBox.Ok)
+            elif pass1 =='':
+                QMessageBox.warning(self,"Faltan datos", "El campo contraseña es obligatorio", QMessageBox.Ok)
+                
+            elif pass2 == '':
+                QMessageBox.warning(self,"Faltan datos", "Es necesario repetir la contraseña", QMessageBox.Ok)
+                
+            
+            elif self.Admin.isChecked():
+                self.funcion = 'Admin'
+            
+            elif self.Medico.isChecked():
+                self.funcion = 'Medico'
+            
+            elif self.Asistente.isChecked():
+                self.funcion = 'Asistente'
+
+            elif pass1 != pass2:
+                QMessageBox.warning(self,"Contraseña incorrecta", "Las constraseñas no coinciden", QMessageBox.Ok)
+
+
+            if pass1 == pass2 and pass1 !='' and pass2 != '':
+                nuevo = Insertar_usuario.Actualizar(str(user),str(pass1),self.funcion,int(self.id))
+                if nuevo.actualizar():
+                    QMessageBox.information(self,"Usuario Actualizado", "El usuario ha sido actualizado con exito", QMessageBox.Ok)
+                    self.close()
+
 
 class Principal_Medico(QMainWindow):
     def __init__(self):
@@ -526,6 +873,7 @@ class Principal_Medico(QMainWindow):
         self.buscarpx = Buscar_px()
         self.formulario = Paciente_consulta()
         self.historial = Busqueda_historial()
+        self.configuracion = Configuracion()
     
 
         #AGREGAR ACCIONES A LOS BOTONES DEL MENU
@@ -534,6 +882,7 @@ class Principal_Medico(QMainWindow):
         self.Btn_buscarpaciente_m.clicked.connect(self.buscarPx)
         self.Btn_nuevopaciente_m.clicked.connect(self.nuevo_formulario)
         self.btn_historialclinico_m.clicked.connect(self.historial_Clinico)
+        self.btn_config_m.clicked.connect(self.config)
 
 
     #-----------------------DECLARAR METODOS PARA ABRIR LAS OPCIONES DEL MENU----------------#
@@ -552,8 +901,11 @@ class Principal_Medico(QMainWindow):
     def historial_Clinico(self):
         self.historial.show()
 
+    def config(self):
+        self.configuracion.show()
 
-#---------------------------------- OPERACIONES PARA EL ASISTENTE  ----------------------------------------#
+
+    #---------------------------------- OPERACIONES PARA EL ASISTENTE  ----------------------------------------#
 
 class Principal_Asistente(QMainWindow):
     def __init__(self):
@@ -594,7 +946,7 @@ class Principal_Asistente(QMainWindow):
 
     def historial_Clinico(self):
         self.historial.show()
-#-------------------------------------OPERACIONES PARA EL ADMINISTRADOR--------------------------------------#
+    #-------------------------------------OPERACIONES PARA EL ADMINISTRADOR--------------------------------------#
 
 class Principal_Admin(QMainWindow):
     def __init__(self):
@@ -633,7 +985,7 @@ class Principal_Admin(QMainWindow):
 
     def historial_Clinico(self):
         self.historial.show()
-#---------------------------------------SUB PROGRAMA PARA AGREGAR PACIENTES PARA CONSULTA-----------------
+    #---------------------------------------SUB PROGRAMA PARA AGREGAR PACIENTES PARA CONSULTA-----------------
 
 class Paciente_consulta(QDialog):
     def __init__(self):
@@ -685,7 +1037,7 @@ class Paciente_consulta(QDialog):
                 self.close()
 
             
-#-------------------------------------PROGRAMA PARA BUSCAR PACIENTES E INICIAR CONSULTA----------------------------#
+    #-------------------------------------PROGRAMA PARA BUSCAR PACIENTES E INICIAR CONSULTA----------------------------#
 class Buscar_Pacientes_Consulta(QDialog):
     def __init__(self):
         QDialog. __init__(self)
@@ -711,7 +1063,7 @@ class Buscar_Pacientes_Consulta(QDialog):
         self.tabla.setSortingEnabled(False)
         # Ocultar encabezado vertical
         self.tabla.verticalHeader().setVisible(False)
-#----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
+    #----------------------------------------------BOTONES PARA EL AREA DE BUSCAR ------------------------------------------
         self.lineEdit_busqueda.textEdited.connect(self.busqueda)
         self.pb_agregar_nuevo_B.clicked.connect(self.progra)
         self.pb_nuevopx.clicked.connect(self.nuevo)
@@ -757,7 +1109,7 @@ class Buscar_Pacientes_Consulta(QDialog):
                 self.agregar.show()
                 
 
-#-------------------------------------MODULO PARA INICIAR CONSULTA DE UN PACIENTE REGISTRADO---------------------#
+    #-------------------------------------MODULO PARA INICIAR CONSULTA DE UN PACIENTE REGISTRADO---------------------#
 
 class Nuevo_Formulario_Px_Registrado(QMainWindow):
     def __init__(self,id,nom,ap1,ap2):
@@ -768,7 +1120,7 @@ class Nuevo_Formulario_Px_Registrado(QMainWindow):
         self.ap1 = ap1
         self.ap2 = ap2
  
-#-------------------------- ASIGNAMOS EL VALOR QUE VIENE DEL METODO A LOS LINE EDIT PARA RELLENAR LOS DATOS
+        #-------------------------- ASIGNAMOS EL VALOR QUE VIENE DEL METODO A LOS LINE EDIT PARA RELLENAR LOS DATOS
         self.lineEdit_nombres_F.setText(self.nombre)
         self.lineEdit_ape_pat_F.setText(self.ap1)
         self.lineEdit_ape_mat_F.setText(self.ap2)
@@ -814,7 +1166,7 @@ class Nuevo_Formulario_Px_Registrado(QMainWindow):
     def cerrar(self):
         self.close()
 
-#---------------------------------------PANTALLA PRINCIPAL, INICIO DE SESION------------------------------------#
+    #---------------------------------------PANTALLA PRINCIPAL, INICIO DE SESION------------------------------------#
 
 
 class Inicio_Sesion(QDialog):

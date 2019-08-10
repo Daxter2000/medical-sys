@@ -79,3 +79,24 @@ unos putazos
 Estudios a realizar : 
 nelson
 
+Fecha : 
+2019-08-09
+
+Hora : 
+16 : 15
+
+Altura : 
+ metros 
+
+Peso : 
+ kilogramos 
+
+Diagnostico : 
+Cefalea recurrente
+
+Tratamiento : 
+Aspirina 10 mg 1 cada 8 horas por 10 dias 
+
+Estudios a realizar : 
+Resonancia magnetica nuclear de grado 100
+
